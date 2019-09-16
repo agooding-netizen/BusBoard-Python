@@ -1,10 +1,76 @@
 {% extends "layout.html" %}
 {% block title %}Bus Information{% endblock %}
 {% block content %}
-<div class="container body-content">
-    <h2>Bus Information</h2>
+<script>
+document.addEventListener('DOMContentLoaded',
+() => {
+    {% for stop in data %}
+    {% for departure in data[stop] %}
+    startTime({{departure[4]}}, {{departure[5]}}, '{{departure[6]}}')
+    {% endfor %}
+    {% endfor %}
+}
+, false);
+function startTime(bus_h, bus_m, id) {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = 60 - today.getSeconds();
+  document.getElementById(id).innerHTML = getMinutes(bus_h - h, bus_m - m, s);
+  var t = setTimeout(() => startTime(bus_h, bus_m, id), 500);
+}
+function getMinutes(h, m, s) {
+  var mins_left = m + h*60
+  var seconds_left = s + 60*mins_left
+
+  if (seconds_left <= -5)
+  {
+    return "<font color=\"red\">Departed</font>"
+  }
+  else if (seconds_left <= 0)
+  {
+    if (seconds_left % 2 == 0){
+      return "<font color=\"red\">QUICK, GET ON!</font>"
+    }
+    else {
+      return "<font color=\"white\">QUICK, GET ON!</font>"
+    }
+  }
+  else if (seconds_left <= 60)
+  {
+    return "<font color=\"green\">Due</font> in " + s + " seconds"
+  }
+  return "Bus expected in " + (m + h*60) + " minutes"
+}
+</script>
+<div id="container" class="container body-content">
+    <table style="width:95%">
+        <tr>
+            <th width="28%"><h2>Bus Information</h2></th>
+            <th width="72%"><marquee behavior="scroll" direction="left" scrollamount="20">🚌</marquee></th>
+        </tr>
+    </table>
     <div>
-        <p>You entered postcode <span>{{ postcode }}</span></p>
+        <p>Postcode: <span>{{ postcode }}</span></p>
+        {% for stop in data %}
+        <p><h2><span>{{ stop }}</span></h2></p>
+        <table style="width:75%">
+            <tr align="left">
+                <th>Time</th>
+                <th>Number</th>
+                <th>Destination</th>
+                <th>Operator</th>
+            </tr>
+            {% for departure in data[stop] %}
+            <tr>
+                <th><div id="{{departure[6]}}"></div></th>
+                {% for info in departure[1:4] %}
+                <th>{{ info }}</th>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
