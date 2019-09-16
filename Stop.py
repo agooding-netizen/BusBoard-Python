@@ -8,7 +8,7 @@ class Stop:
         self.atcocode = stop_info["atcocode"]
 
     def __repr__(self):
-        return f"Stop name {self.name} at {self.location}"
+        return f"Stop: {self.name} at {self.location}"
 
     def get_atcocode(self):
         return self.atcocode
