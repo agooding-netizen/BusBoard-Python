@@ -4,7 +4,7 @@ def main(postcode):
     with open('secrets.txt') as file:
         api_code = file.readline().split("=")[1].strip()
         api_key = file.readline().split("=")[1].strip()
-        gmaps_api = file.readline().split("=")[1].strip()
+        mapquest_key = file.readline().split("=")[1].strip()
 
     new_request = Request(api_code, api_key)
     postcode_response = new_request.set_postcode(postcode)
@@ -14,11 +14,12 @@ def main(postcode):
         stops = new_request.get_nearby_stops()
 
         data = {}
-        routes = []
+        routes = {}
 
         for stop in stops:
-            #print(stop)
             atcocode = stop.get_atcocode()
+            lat = stop.get_latitude()
+            long = stop.get_longitude()
             new_request = Request(api_code, api_key)
             new_request.set_atcocode(atcocode)
             new_request.set_limit(5)
@@ -35,13 +36,14 @@ def main(postcode):
                 for upcoming_stop in upcoming_stops:
                     lat_long.append([upcoming_stop.get_latitude(), upcoming_stop.get_longitude()])
 
-                route = [departure.bus_id, lat_long]
-                routes.append(route)
+                routes[departure.bus_id] = lat_long
+
+                url = "https://www.mapquestapi.com/staticmap/v5/map?key=" + api_key + "&scale=1&start=" + str(routes[departure.bus_id][0][0]) + ", " + str(routes[departure.bus_id][0][1]) + "&end=" + str(routes[departure.bus_id][-1][0]) + ", " + str(routes[departure.bus_id][-1][0]) + "&locations=" + str(lat) + ", " + str(long) + "&size=800,300"
 
             data[stop] = stop_departures
-            print(routes)
-        return [data, routes, gmaps_api]
+        return [data, routes, mapquest_key, lat, long]
 
     return 404
+
 
 if __name__ == "__main__": main()

@@ -87,7 +87,7 @@ class Request:
         return departures
 
     def get_route(self, departure, atcocode):
-        link = f"https://transportapi.com/v3//uk/bus/route/{departure.operator_code}/{departure.number}/{departure.direction}/{atcocode}/timetable.json?app_id={self.api_code}&app_key={self.api_key}"
+        link = f"https://transportapi.com/v3//uk/bus/route/{departure.operator_code}/{departure.number}/{departure.direction}/{atcocode}/timetable.json?app_id={self.api_code}&app_key={self.api_key}&stops=all"
         print(link)
         page = urlopen(link)
         data = page.read()
@@ -103,7 +103,6 @@ class Request:
         upcoming_stops = []
 
         for stop in stops_data:
-            #stops_data[stop].update({"description": ''})
             upcoming_stops.append(Stop(stop))
 
         return upcoming_stops

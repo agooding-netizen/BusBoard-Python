@@ -45,25 +45,6 @@ function getMinutes(h, m, s) {
 function remove_last_element(list_a) {
   return list_a.splice(0, list_a.length - 1)
 }
-function initMap() {
-  var bus_id = document.currentScript.getAttribute('bus_id');
-  var map = new google.maps.Map(document.getElementById('googleMap'), {zoom: 15, center: {lat: 0, lng: 0}});
-
-  var markers = [];
-  var js_data = remove_last_element([{% for route in data[1] %}remove_last_element([ '{{route[0]}}',{% for latlong in route[1] %}[ {{latlong[0]}}, {{latlong[1]}} ],{% endfor %}[]]),{% endfor %}[]])
-    var route;
-    for (route = 0; route < js_data.length; route++) {
-      if (js_data[route][0] == bus_id){
-        var latlong;
-        for (latlong = 0; latlong < js_data[route][1].length; latlong++){
-            var bus_stop = {lat: js_data[route][1][latlong][0], lng: js_data[route][1][latlong][1]};
-            markers.push(new google.maps.Marker({position: bus_stop, map: map}))
-        }
-      }
-    }
-
-   map.setCenter(markers[0].position)
-}
 
 </script>
 
@@ -76,6 +57,7 @@ function initMap() {
     </table>
     <div>
         <p>Postcode: <span>{{ postcode }}</span></p>
+
         {% for stop in data[0] %}
         <p><h2><span>{{ stop }}</span></h2></p>
         <table style="width:75%">
@@ -92,10 +74,7 @@ function initMap() {
                 <th>{{ info }}</th>
                 {% endfor %}
             </tr>
-            <div id="googleMap" style="width:80%;height:300px;"></div>
-            <script src="https://maps.googleapis.com/maps/api/js?key={{data[2]}}&callback=initMap" bus_id="{{departure[6]}}"></script>
-
-
+            <embed src="https://www.mapquestapi.com/staticmap/v5/map?key={{data[2]}}&scale=1&start={{data[1][1][1][0][0]}}, {{data[1][1][1][0][1]}}&end={{data[1][1][1][-1][0]}}, {{data[1][1][1][-1][1]}}&locations={{data[3][0]}},{{data[4][0]}}&size=800,300" width="800" height="300">
 
             {% endfor %}
         </table>
