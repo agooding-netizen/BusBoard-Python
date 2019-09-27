@@ -15,6 +15,7 @@ def main(postcode):
 
         data = {}
         routes = {}
+        url = {}
 
         for stop in stops:
             atcocode = stop.get_atcocode()
@@ -27,6 +28,7 @@ def main(postcode):
 
             stop_departures = []
 
+
             for departure in departures[:1]:
                 stop_departures.append(departure.get_info())
                 new_request = Request(api_code, api_key)
@@ -38,10 +40,17 @@ def main(postcode):
 
                 routes[departure.bus_id] = lat_long
 
-                url = "https://www.mapquestapi.com/staticmap/v5/map?key=" + api_key + "&scale=1&start=" + str(routes[departure.bus_id][0][0]) + ", " + str(routes[departure.bus_id][0][1]) + "&end=" + str(routes[departure.bus_id][-1][0]) + ", " + str(routes[departure.bus_id][-1][0]) + "&locations=" + str(lat) + ", " + str(long) + "&size=800,300"
+                url[stop] = "https://www.mapquestapi.com/staticmap/v5/map?key=" + mapquest_key + "&scale=1&start=" +\
+                            str(routes[departure.bus_id][0][0]) + ", " + str(routes[departure.bus_id][0][1]) \
+                            + "|https://i.imgur.com/5nMDPf5.png&end=" \
+                            + str(routes[departure.bus_id][-1][0]) + ", " + str(routes[departure.bus_id][-1][1]) \
+                            + "|https://i.imgur.com/b0kLFOX.png&locations=" \
+                            + str(lat) + ", " + str(long) \
+                            + "|https://i.imgur.com/WKveOUi.png&size=800,300"
+
 
             data[stop] = stop_departures
-        return [data, routes, mapquest_key, lat, long]
+        return [data, url]
 
     return 404
 

@@ -9,6 +9,11 @@ def index():
     return render_template('index.html', status="good")
 
 
+@app.route("/graphics")
+def graphics():
+    return render_template('/graphics/void_dweller.png', status="good")
+
+
 @app.route("/busInfo")
 def busInfo():
     postcode = request.args.get('postcode').upper()

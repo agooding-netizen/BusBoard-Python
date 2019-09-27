@@ -42,9 +42,6 @@ function getMinutes(h, m, s) {
   }
   return "Bus expected in " + (m + h*60) + " minutes"
 }
-function remove_last_element(list_a) {
-  return list_a.splice(0, list_a.length - 1)
-}
 
 </script>
 
@@ -74,7 +71,7 @@ function remove_last_element(list_a) {
                 <th>{{ info }}</th>
                 {% endfor %}
             </tr>
-            <embed src="https://www.mapquestapi.com/staticmap/v5/map?key={{data[2]}}&scale=1&start={{data[1][1][1][0][0]}}, {{data[1][1][1][0][1]}}&end={{data[1][1][1][-1][0]}}, {{data[1][1][1][-1][1]}}&locations={{data[3][0]}},{{data[4][0]}}&size=800,300" width="800" height="300">
+            <embed src="{{data[1][stop]}}" width="800" height="300">
 
             {% endfor %}
         </table>
